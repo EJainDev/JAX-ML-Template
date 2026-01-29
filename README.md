@@ -10,11 +10,7 @@ The repository probably looks something like this for you right now:
 
 ![Alt text](./images/repo.png)
 
-Well, the first thing you want to do is create a virtual environment by running `python -m venv .venv` so you can separate your dependencies. This project was built using Python 3.12.3. If you look at the requirements.txt, you'll probably see A LOT of libraries, but most of these are just dependencies of the actually used libraries. This is a sample requirements.txt. What you actually need to install is the following:
-
-`jax flax optax orbax grain tensorflow-cpu tqdm tensorboard scikit-learn numpy polars`
-
-Make sure to install the accelerator version of jax if you can but if you have a CUDA-13 device you would like to use it with, you can just install directly from the requirements.txt
+Well, the first thing you want to do is create a virtual environment by running `python -m venv .venv` so you can separate your dependencies. This project was built using Python 3.12.3. You can download the dependencies from the `requirements.txt` by running `pip install -r requirements.txt`. NOTE: If you have an accelerator, install jax first by following the instructions on their website to enable accelerator usage.
 
 Now that you have your virtual environment setup, you can actually start understanding the directory layout.
 
