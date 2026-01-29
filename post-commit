@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# This is a sample post commit file for a git repository that wants to automate model training and data pipeline updates.
+
+# Get the list of changed files in the current commit
+FILES=$(git show --name-only HEAD | tail -n +2)
+COMMIT_HASH=$(git log -1 --format="%H")
+COMMIT_MSG=$(git log -1 --format="%B")
+
+# Check if any files are in src/data/
+if echo "$FILES" | grep -qE "src/data/(load_raw|process_data)\.py"; then
+  echo "Creating new data experiment..."
+  $(.venv/bin/python scripts/update_data_version.py --commit_id $COMMIT_HASH --commit_msg "$COMMIT_MSG")
+  git add "data-experiments.yaml"
+  git commit -m "Updated data version"
+  echo "Rerunning data pipeline..."
+  $(.venv/bin/python scripts/run_data_pipeline.py --commit_id $COMMIT_HASH)
+fi
+
+# Check if any files are in src/models/
+if echo "$FILES" | grep -q "^src/models/"; then
+  echo "Creating new model experiment..."
+  $(.venv/bin/python scripts/update_experiment_version.py --commit_id $COMMIT_HASH --commit_msg "$COMMIT_MSG")
+  git add "experiments.yaml" "src/config.py"
+  git commit -m "Updated model version"
+  echo "Running new model..."
+  export XLA_PYTHON_CLIENT_MEM_FRACTION=0.1
+  $(.venv/bin/python -m src.training.train)
+fi
