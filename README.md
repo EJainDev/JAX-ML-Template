@@ -2,7 +2,7 @@
 
 ## What is This Repository?
 
-JAX is a (relatively) new machine learning technology that aims to be the best of both Tensorflow and PyTorch. Released 5 years ago, this has both the speed of Tensorflow and the flexibility of PyTorch builtin without complicated workarounds. Although it is currently in its early stages of development, many tools have developed around it, including machine learning libraries such as Flax, Optax, Orbax, etc. With Google behind most of these tools, they are likely to stay for a while. In this repository, I present my template for managing such a project and getting started quickly. This repository uses Flax and not Equinox because of Flax's Google backing and JAX-like functional nature.
+JAX is a (relatively) new machine learning technology that aims to be the best of both Tensorflow and PyTorch. Released in 2018, this has both the speed of Tensorflow and the flexibility of PyTorch builtin without complicated workarounds. Although it is currently in its early stages of development, many tools have developed around it, including machine learning libraries such as Flax, Optax, Orbax, etc. With Google behind most of these tools, they are likely to stay for a while. In this repository, I present my template for managing such a project and getting started quickly. This repository uses Flax and not Equinox because of Flax's Google backing and JAX-like functional nature.
 
 ## How do You Get Started?
 
