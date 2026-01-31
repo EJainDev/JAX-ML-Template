@@ -1,0 +1,3 @@
+[submodule "src/training-engine"]
+	path = src/training-engine
+	url = https://github.com/EJainDev/JAX-Training-Engine
