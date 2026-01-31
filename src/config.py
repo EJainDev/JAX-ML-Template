@@ -1,11 +1,7 @@
 from pathlib import Path
+from version import *
 
 import jax
-
-MAJOR_VERSION = 0
-MINOR_VERSION = 0
-PATCH_VERSION = 0
-TWEAK_VERSION = 0
 
 ROOT_DIR = Path(__file__).parent.parent.resolve()
 

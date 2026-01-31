@@ -27,8 +27,8 @@ def main():
 
     # Run pipeline steps
     steps = [
-        f"{venv_python} -m src.data.load_raw",
-        f"{venv_python} -m src.data.process_data",
+        f"{venv_python} -m src.data_pipeline.load_raw",
+        f"{venv_python} -m src.data_pipeline.process_data",
     ]
 
     for command in steps:

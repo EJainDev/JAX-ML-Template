@@ -13,7 +13,7 @@ from tqdm.auto import tqdm
 
 from ..evaluation.criterion import compute_mse
 
-from ..data.dataset import Datasource
+from ..models.dataset import Datasource
 
 from ..models.model import Model
 
