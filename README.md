@@ -6,9 +6,7 @@ JAX is a (relatively) new machine learning technology that aims to be the best o
 
 ## How do You Get Started?
 
-The repository probably looks something like this for you right now:
-
-![Alt text](./images/repo.png)
+The repository probably looks something like a bunch of directories you don't know right now.
 
 Well, the first thing you want to do is create a virtual environment by running `python -m venv .venv` so you can separate your dependencies. This project was built using Python 3.12.3. You can download the dependencies from the `requirements.txt` by running `pip install -r requirements.txt`. NOTE: If you have an accelerator, install jax first by following the instructions on their website to enable accelerator usage.
 
@@ -23,23 +21,25 @@ Now that you have your virtual environment setup, you can actually start underst
 - `README`: The file you are reading right now
 - `requirements.txt`: A simple python requirements.txt that you might have for such a project
 - `src/`: Contains (most) of your code
-    - `data/`: Contains data related utilities
+    - `data_pipeline/`: Contains data related utilities
         - `__init__.py`: A standard Python file for declaring it as a module
-        - `dataset.py`: This is where you define your data handling utilities to use with Grain for feeding data to your model. Most importantly, it contains a data source class to customize data loading behavior.
         - `load_raw.py`: A Python script that you may use to write code that loads raw data from somewhere
         - `process_data.py`: A Python script that you should use to preprocess your data before feeding it into your model dataloading system.
+        - `version.py`: This Python file contains the version of your mdata
     - `evaluation/`: Contains model evaluation utilities
         - `__init__.py`: A standard Python file for declaring it as a module
         - `criterion.py`: A Python for declaring utility criterion that may be used to evaluate or train your model
         - `evaluate.py`: A Python script for testing your model. This file should not require significant changes (other than adding stuff) unless you change the training code
     - `models/`: Contains all the Python scripts necessary for declaring your models
         - `__init__.py`: A standard Python file for declaring it as a module
+        - `dataset.py`: This is where you define your data handling utilities to use with Grain for feeding data to your model. Most importantly, it contains a data source class   to customize data loading behavior.
         - `model.py`: This is where you should define your main model that you want to train.
-    - `training/`: This package contains your model training functions and utilities:
+    - `training_engine/flax_training_engine`: This package contains your model training functions and utilities:
         - `__init__.py`: A standard Python file for declaring it as a module
         - `train.py`: This is where most of the model training code is with a prebuilt training loop that is heavily optimized. The `if __name__ == "__main__"` code contains a sample that doesn't work but you can use it to place your model specific code. Or you can use another script if you do not need to adjust the training loop (unlikely).
     - `__init__.py`: A standard Python file for declaring it as a module
     - `config.py`: This Python file contains all the configuration your model, your data, and everything else will use.
+    - `version.py`: This Python file contains the version of your models
 
 ## Running Code
 
