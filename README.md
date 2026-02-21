@@ -40,6 +40,7 @@ Now that you have your virtual environment setup, you can actually start underst
     - `__init__.py`: A standard Python file for declaring it as a module
     - `config.py`: This Python file contains all the configuration your model, your data, and everything else will use.
     - `version.py`: This Python file contains the version of your models
+    - `train.py`: This Python file is where 
 
 ## Running Code
 
