@@ -1,14 +1,14 @@
 import os
+
 import jax
+import grain
 import grain.python as pygrain
 from flax import nnx
-from typing import Any
 import joblib
 import orbax.checkpoint as ocp
 import polars as pl
 import numpy as np
 from sklearn.model_selection import train_test_split
-import grain
 from tqdm.auto import tqdm
 
 from ..evaluation.criterion import compute_mse
@@ -17,7 +17,7 @@ from ..models.dataset import Datasource
 
 from ..models.model import Model
 
-from ..config import *
+from ..config import *  # pylint: disable=wildcard-import, unused-wildcard-import
 
 
 def evaluate(
@@ -30,7 +30,8 @@ def evaluate(
 
     :param model: The trained model to evaluate.
     :type model: Model
-    :param test_dataset: A grain iterable dataset that contains the test samples and on iteration returns a dictionary with keys 'features' and 'targets'
+    :param test_dataset: A grain iterable dataset that contains the test samples and on iteration 
+    returns a dictionary with keys 'features' and 'targets'
     :type test_dataset: grain.IterDataset
     :param num_test_samples: The number of test samples in the test dataset
     :type num_test_samples: int
@@ -40,37 +41,26 @@ def evaluate(
 
     model.eval()  # Switch to evaluation mode
 
-    # Get the graphdef (constant), parameters (changing values), and static (everything else)
-    graphdef, params, static = nnx.split(model, nnx.Param, nnx.Everything)
-
-    # Get the constant graph defs of the params for later reconstruction as well as the leaves
-    param_leaves, param_graph_def = jax.tree.flatten(params)
-
-    @jax.jit
-    def test_step(param_leaves: list[Any], x: jax.Array, y: jax.Array) -> jax.Array:
+    @nnx.jit
+    def test_step(model: nnx.Module, x_batch: jax.Array, y_batch: jax.Array) -> jax.Array:
         """
         Does one evaluation step on the given inputs and returns loss.
 
-        :param param_leaves: The leaves of the pytree representing the model parameters
-        :type param_leaves: list[Any]
-        :param x: The input features for the batch to be fed directly into the model
-        :type x: jax.Array
-        :param y: The target predictions for the batch to be fed directly into the loss function
-        :type y: jax.Array
+        :param model: The model to evaluate
+        :type model: nnx.Module
+        :param x_batch: The input features for the batch to be fed directly into the model
+        :type x_batch: jax.Array
+        :param y_batch: The target predictions for the batch to be fed directly into the loss function
+        :type y_batch: jax.Array
         :return: The loss value for the batch
         :rtype: jax.Array
         """
-        # Restore the params pytree from the leaves
-        params = jax.tree.unflatten(param_graph_def, param_leaves)
-
-        # Restore the model with the current params
-        model = nnx.merge(graphdef, params, static)
 
         # Get model predictions
-        preds = model(x)
+        preds = model(x_batch)
 
         # Get loss value
-        loss = compute_mse(preds, y)
+        loss = compute_mse(preds, y_batch)
 
         return loss
 
@@ -81,17 +71,19 @@ def evaluate(
     test_loss = 0.0
 
     # Use tqdm for progress bars
-    for data in tqdm(
+    for batch in tqdm(
         test_dataset,
         total=test_steps,
         desc="Evaluating",
         leave=True,
     ):
-        x: jax.Array = jax.device_put(data["features"])  # Move data to accelerator
-        y: jax.Array = jax.device_put(data["targets"])  # Move data to accelerator
+        batch_x: jax.Array = jax.device_put(
+            batch["features"])  # Move data to accelerator
+        batch_y: jax.Array = jax.device_put(
+            batch["targets"])  # Move data to accelerator
 
         # Evaluate
-        loss = test_step(param_leaves, x, y)
+        loss = test_step(model, batch_x, batch_y)
 
         # Accumulate loss
         test_loss += loss.item()
@@ -180,10 +172,10 @@ if __name__ == "__main__":
         test_loss = evaluate(model, test_dataset, num_test_samples)
 
         # Save loss to file
-        with open(TEST_RESULTS_DIR / "test_results.txt", "w") as f:
+        with open(TEST_RESULTS_DIR / "test_results.txt", "w", encoding="utf-8") as f:
             f.write(f"{test_loss:.6f}")
-        print(f"Test loss saved to {TEST_RESULTS_DIR / "test_results.txt"}")
+        print(f"Test loss saved to {TEST_RESULTS_DIR / 'test_results.txt'}")
         print(f"Test Loss: {test_loss:.6f}")
 
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         print(f"An error occurred during evaluation: {e}")

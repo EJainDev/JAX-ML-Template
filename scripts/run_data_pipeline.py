@@ -2,26 +2,29 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, "src")
 
-def run_command(command):
-    """Run a shell command silently."""
+
+def run_command(cmd, project_root):
+    """Run a shell cmd silently."""
     try:
         subprocess.run(
-            command,
+            cmd,
             shell=True,
             check=True,
-            cwd=PROJECT_ROOT,
+            cwd=project_root,
             executable="/bin/bash",
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
         return True
     except subprocess.CalledProcessError as e:
+        print(e)
         return False
 
 
-def main():
-    """Execute the data pipeline."""
+if __name__ == "__main__":
+    PROJECT_ROOT = Path(__file__).parent.parent.resolve()
     # Get the venv Python executable
     venv_python = PROJECT_ROOT / ".venv" / "bin" / "python"
 
@@ -32,12 +35,4 @@ def main():
     ]
 
     for command in steps:
-        if not run_command(command):
-            return 1
-
-    return 0
-
-
-if __name__ == "__main__":
-    PROJECT_ROOT = Path(__file__).parent.parent.resolve()
-    sys.exit(main())
+        run_command(command, PROJECT_ROOT)

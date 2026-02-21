@@ -1,5 +1,5 @@
 from pathlib import Path
-from version import *
+from .version import MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION, TWEAK_VERSION
 
 import jax
 
@@ -8,7 +8,7 @@ ROOT_DIR = Path(__file__).parent.parent.resolve()
 DATA_DIR = ROOT_DIR / "data"
 
 RAW_DATA_DIR = DATA_DIR / "raw"
-RAW_DATA_FILE = RAW_DATA_DIR / "Earthquakes_USGS.csv"
+RAW_DATA_FILE = RAW_DATA_DIR / "data.csv"
 
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 PROCESSED_DATA_FILE = PROCESSED_DATA_DIR / "data.parquet"

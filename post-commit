@@ -10,7 +10,7 @@ COMMIT_MSG=$(git log -1 --format="%B")
 # Check if any files are in src/data/
 if echo "$FILES" | grep -qE "src/data/(load_raw|process_data)\.py"; then
   echo "Creating new data experiment..."
-  $(.venv/bin/python scripts/update_data_version.py --commit_id $COMMIT_HASH --commit_msg "$COMMIT_MSG")
+  $(.venv/bin/python -m scripts.update_data_version --commit_id $COMMIT_HASH --commit_msg "$COMMIT_MSG")
   git add "data-experiments.yaml"
   git commit -m "Updated data version"
   echo "Rerunning data pipeline..."
@@ -20,7 +20,7 @@ fi
 # Check if any files are in src/models/
 if echo "$FILES" | grep -q "^src/models/"; then
   echo "Creating new model experiment..."
-  $(.venv/bin/python scripts/update_experiment_version.py --commit_id $COMMIT_HASH --commit_msg "$COMMIT_MSG")
+  $(.venv/bin/python -m scripts.update_experiment_version --commit_id $COMMIT_HASH --commit_msg "$COMMIT_MSG")
   git add "experiments.yaml" "src/config.py"
   git commit -m "Updated model version"
   echo "Running new model..."

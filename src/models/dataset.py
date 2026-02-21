@@ -3,22 +3,20 @@ from typing import SupportsIndex
 import grain.python as pygrain
 import numpy as np
 
-from ..config import *
-
 
 class Datasource(pygrain.RandomAccessDataSource):
-    def __init__(self, X: np.ndarray, y: np.ndarray) -> None:
-        self.X = np.array(X)
+    def __init__(self, x: np.ndarray, y: np.ndarray) -> None:
+        self.x = np.array(x)
         self.y = np.array(y)
 
     def load_data(self) -> None:
         pass
 
     def __len__(self) -> int:
-        return self.X.shape[0]
+        return self.x.shape[0]
 
     def __getitem__(self, idx: SupportsIndex) -> dict[str, np.ndarray]:
         return {
-            "features": self.X[index(idx)],
+            "features": self.x[index(idx)],
             "targets": self.y[index(idx)],
         }
